@@ -1,47 +1,36 @@
 import random
-# a = input()
-# b = a.isdigit()
-# print(b)
-
-top_of_range = input("Type a number you want to random: ")
-if top_of_range.isdigit():
-    top_of_range = int(top_of_range) #use for converting output to int
-    
-    if top_of_range <= 0:
-        print("Pls type of number larger than 0 next time.")
+# a = int(input("Type a number "))
+a = input("Type a number ")
+if a.isdigit():
+    a = int(a)
+    if a < 0:
+        print("Type a positive number next time")
         quit()
 else:
-    print("Pls type of number next time.")
+    print("Type number next time")
     quit()
 
-# r = random.randrange(0, 11) #include nagetive number
-r = random.randint(0,top_of_range)
-total_guess = 0
+times = 0
 
+r = random.randint(0,a)
 while True:
-    user_guess = input("Type a number you guess: ")
-    if user_guess.isdigit():
-        user_guess = int(user_guess)
+    # guess = int(input("Make guess "))
+    guess = input("Make guess ")
+    times +=1
+    if guess.isdigit():
+        guess = int(guess)
+    else:
+        print("Type a number again")
+        quit()
         
-        if user_guess <= 0:
-            print("Pls type of number larger than 0 next time.")
-            quit()
-    else: 
-        print("Pls type of number next time.")
-        continue #allow users re-enter when they enter the wrong input
-    if user_guess == r:
-        print("wow, that's correct. Y got it")
+    if guess == r:
+        print("You got it")
         break
-    else: 
-        # print("oh no, it's wrong. It's ", r) 
+    elif guess >= r:
+        print("You were above the number ")
+    elif guess <= r:
+        print("You were below the number")
+    else:
+        print("Try again")
 
-        if user_guess > r:
-            print("Y were above the number")
-        else:
-            print("Y were below the number")
-        total_guess += 1
-        # break      #if the user makes a wrong guess, it still run
-    
-print("The total number of time you guessed is", total_guess)
-
-
+print("So all the times you tried again is ", times)
