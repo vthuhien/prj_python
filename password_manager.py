@@ -8,7 +8,11 @@ def view ():
 def add():
     acc = input("Account Name: ")
     passw = input("Password: ")
-    with open('password.txt', 'a', )
+
+    # file = open('ps.txt','a')
+    # file.close()
+    with open('password.txt', 'a') as f:
+        f.write(acc + "|" + passw)
 
 
 while True:
