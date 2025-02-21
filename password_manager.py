@@ -4,21 +4,28 @@
 # Load mã khoá để mã hoá và giải mã
 
 
-from cryptography.fernet import Fernet #this model allows you to encrypt the data 
+from cryptography.fernet import Fernet 
 import os
+import base64
+import hashlib
+
+def generate_key_from_password(password: str) -> bytes: #convert entered key into valid Fernet key (32 bytes)
+    key = hashlib.sha256(password.encode()).digest() 
+    return base64.urlsafe_b64encode(key)
 
 # create key (only run once )
 def generate_key():
     if os.path.exists("key.key"):
         print("Key already exists. Skipping key generation.")
-        return 
+        return
     
-    key = Fernet.generate_key()
-    with open("key.key", "wb") as f:
-        key = input("Enter key:")
-        f.write(key)
-    print("Master key has been created!")
+    password = input("Enter master password: ")
+    key = generate_key_from_password(password)
 
+    with open("key.key", "wb") as f:
+        f.write(key)
+    
+    print("Master key has been created!")
 #load key from file key.key 
 def load_key():
     try:
@@ -32,9 +39,10 @@ generate_key()
 
 a = input("What is the master password? ")
 
-key = load_key() 
+key = generate_key_from_password(a)
 
-if a.encode() != key:
+stored_key = load_key() 
+if key != stored_key:
     print("Error: Incorrect master key!")
     exit()
 
