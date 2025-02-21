@@ -1,20 +1,31 @@
-from cryptography.fernet import Fernet #this model allows you to encrypt text 
+from cryptography.fernet import Fernet #this model allows you to encrypt the text 
+
+# if you enter the wrong password, it can't decrypt the text
+
+# # make key for us
+# def main_key():
+#     key = Fernet.generate_key()
+#     with open("key.key", "wb") as key_f: #use wb for binary file
+#         key_f.write(key)
+
+
+def load_key():
+    with open("key.key", "rb") as load_f:
+        check_key = load_f.read()
+    return check_key
 
 a = input("What is the master password? ")
-# if you enter the wrong pass, the decrypted text will be incorrect
+key = load_key() + a.encode() #convert a from string to bytes for encrypting
+fer = Fernet(key)
 
-# make key for us
-def main_key():
-    key = Fernet.generate_key()
-    with open("key.key", "wb"): #use wb for binary file
-        pass
 def view ():
     with open('password.txt', 'r') as read_f:
         for line in read_f.readlines():
             data = line.rstrip()
             acc, passw = data.split("|")
             print("Account :", acc)
-            print("Password: ", passw, "\n")
+            print("Password: ", str(fer.encrypt(passw.encode())), "\n")  #encrypt data with Fernet and convert it into a string for easy file entry
+            # if the user enters the correct password, the password will be decrypted
 
 
 def add():
@@ -24,7 +35,7 @@ def add():
     # file = open('ps.txt','a')
     # file.close()
     with open('password.txt', 'a') as f:
-        f.write(acc + "|" + passw + "\n")
+        f.write(acc + "|" + str(fer.encrypt(passw.encode())) + "\n")
         #pip install cryptography for password
 
 
