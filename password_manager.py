@@ -1,31 +1,52 @@
-from cryptography.fernet import Fernet #this model allows you to encrypt the text 
-
-# if you enter the wrong password, it can't decrypt the text
-
-# # make key for us
-# def main_key():
-#     key = Fernet.generate_key()
-#     with open("key.key", "wb") as key_f: #use wb for binary file
-#         key_f.write(key)
+# Dùng mã khóa để mã hóa mật khẩu.
+# Lưu mật khẩu đã mã hóa vào file.
+# Khi cần sử dụng, dùng cùng mã khóa để giải mã.
+# Load mã khoá để mã hoá và giải mã
 
 
+from cryptography.fernet import Fernet #this model allows you to encrypt the data 
+import os
+
+# create key (only run once )
+def generate_key():
+    if os.path.exists("key.key"):
+        print("Key already exists. Skipping key generation.")
+        return 
+    
+    key = Fernet.generate_key()
+    with open("key.key", "wb") as f:
+        key = input("Enter key:")
+        f.write(key)
+    print("New key has been generated and saved. It can't be changed")
+
+generate_key()
+
+#load key from file key.key 
 def load_key():
-    with open("key.key", "rb") as load_f:
-        check_key = load_f.read()
-    return check_key
+    try:
+        with open("key.key", "rb") as load_f:
+            return load_f.read()
+    except FileNotFoundError:
+        print("File not found. Gennerate a key first")
+        exit()
 
 a = input("What is the master password? ")
-key = load_key() + a.encode() #convert a from string to bytes for encrypting
+
+key = load_key() 
+
+if a.encode() != key:
+    print("Error: Incorrect master key!")
+    exit()
+
 fer = Fernet(key)
 
 def view ():
     with open('password.txt', 'r') as read_f:
         for line in read_f.readlines():
-            data = line.rstrip()
-            acc, passw = data.split("|")
+            acc, passw = line.strip().split("|")
+            decrypted_passw = fer.decrypt(passw.encode()).decode() # Decrypt the password before showing to the user
             print("Account :", acc)
-            print("Password: ", str(fer.encrypt(passw.encode())), "\n")  #encrypt data with Fernet and convert it into a string for easy file entry
-            # if the user enters the correct password, the password will be decrypted
+            print("Password: ", decrypted_passw , "\n")  
 
 
 def add():
@@ -35,8 +56,7 @@ def add():
     # file = open('ps.txt','a')
     # file.close()
     with open('password.txt', 'a') as f:
-        f.write(acc + "|" + str(fer.encrypt(passw.encode())) + "\n")
-        #pip install cryptography for password
+        f.write(acc + "|" + fer.encrypt(passw.encode()).decode() + "\n")        
 
 
 while True:
