@@ -17,9 +17,7 @@ def generate_key():
     with open("key.key", "wb") as f:
         key = input("Enter key:")
         f.write(key)
-    print("New key has been generated and saved. It can't be changed")
-
-generate_key()
+    print("Master key has been created!")
 
 #load key from file key.key 
 def load_key():
@@ -29,6 +27,8 @@ def load_key():
     except FileNotFoundError:
         print("File not found. Gennerate a key first")
         exit()
+
+generate_key()
 
 a = input("What is the master password? ")
 
