@@ -9,7 +9,7 @@ import os
 import base64
 import hashlib
 
-def generate_key_from_password(password: str) -> bytes: #convert entered key into valid Fernet key (32 bytes)
+def convert(password: str) -> bytes: #convert entered key into valid Fernet key (32 bytes)
     key = hashlib.sha256(password.encode()).digest() 
     return base64.urlsafe_b64encode(key)
 
@@ -20,7 +20,7 @@ def generate_key():
         return
     
     password = input("Enter master password: ")
-    key = generate_key_from_password(password)
+    key = convert(password)
 
     with open("key.key", "wb") as f:
         f.write(key)
@@ -39,12 +39,23 @@ generate_key()
 
 a = input("What is the master password? ")
 
-key = generate_key_from_password(a)
+key = convert(a)
 
-stored_key = load_key() 
-if key != stored_key:
-    print("Error: Incorrect master key!")
-    exit()
+stored_key = load_key()
+
+max_tmp = 3
+tmp = 0
+while tmp < max_tmp:
+    tmp +=1
+    print(f"You have {max_tmp - tmp} times ")
+    a2 = input("Try again: ") 
+    key = convert(a2) #update key 
+    if key == stored_key:
+        break
+else:
+    print("Error")
+    quit()
+
 
 fer = Fernet(key)
 
