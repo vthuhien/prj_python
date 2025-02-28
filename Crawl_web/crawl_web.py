@@ -7,9 +7,9 @@ Original file is located at
     https://colab.research.google.com/drive/1ZQT0OI1GEVypYwXtAjiOlP6mwS5YvrDq
 """
 
-!pip install requests beautifulsoup4
+# !pip install requests beautifulsoup4
 
-!pip install requests
+# !pip install requests
 
 """### Web Crawl
 * This is a auto process to extract infomations of website and store it in a suitable form.
